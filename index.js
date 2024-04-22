@@ -29,6 +29,7 @@ async function run() {
     await client.connect();
 
     const coffeeCollection = client.db('coffeeDB').collection('coffee');
+    const userCollection = client.db('coffeeDB').collection('user')
 
     app.get('/coffee', async(req, res) =>{
       const cursor = coffeeCollection.find();
@@ -36,6 +37,7 @@ async function run() {
       res.send(result)
     })
 
+    // get anbe
     app.get('/coffee/:id', async(req, res) => {
       const id = req.params.id
       const query = {_id: new ObjectId(id)}
@@ -43,7 +45,7 @@ async function run() {
       res.send(result)
     })
 
-
+// data rakbe
     app.post('/coffee', async(req, res) =>{
       const newCoffee = req.body
       console.log(newCoffee);
@@ -51,6 +53,7 @@ async function run() {
       res.send(result);
     })
 
+    // data update korbe
     app.put('/coffee/:id', async(req,res) =>{
       const id = req.params.id
       const filter = {_id: new ObjectId(id)}
@@ -71,11 +74,28 @@ async function run() {
       res.send(result);
     })
 
+    // data delete korbe
     app.delete('/coffee/:id', async(req, res) =>{
       const id = req.params.id
       const query = {_id: new ObjectId(id) }
       const result = await coffeeCollection.deleteOne(query)
       res.send(result)
+    })
+
+
+    // users related apis
+
+    app.get('/user', async(req, res) =>{
+      const cursor = userCollection.find();
+      const users = await cursor.toArray();
+      res.send(users);
+    })
+
+    app.post('/user', async(req, res) =>{
+      const user = req.body;
+      console.log(user);
+      const result = await userCollection.insertOne(user);
+      res.send(result);
     })
 
     // Send a ping to confirm a successful connection
